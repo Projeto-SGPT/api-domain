@@ -1,14 +1,20 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'com.gradle.plugin-publish' version '1.2.1'
 }
 
 group = 'com.br.sgpt.domain'
-version = '0.0.2-SNAPSHOT'
+version = '0.0.3-SNAPSHOT'
 
 repositories {
     gradlePluginPortal()
     mavenCentral()
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
 }
 
 dependencies {
@@ -22,17 +28,34 @@ test {
 
 publishing {
     publications {
+        // Simplified Maven publication configuration
         mavenJava(MavenPublication) {
             from components.java
+            groupId = project.group
+            artifactId = 'api-domain'
+            version = project.version
+
+            pom {
+                name = 'SGPT Domain'
+                description = 'Domain layer for SGPT project'
+                url = 'https://github.com/Projeto-SGPT/api-domain'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+            }
         }
     }
+
     repositories {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/Projeto-SGPT/api-domain")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
