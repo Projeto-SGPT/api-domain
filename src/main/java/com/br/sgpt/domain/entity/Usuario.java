@@ -19,7 +19,7 @@ public class Usuario {
     }
 
     public boolean senhaCorreta(String senha, Hasher hasher) {
-        return hasher.verificar(senha, senhaHash);
+        return hasher.verificar(senha, this.senhaHash);
     }
 
     public UUID getId() { return id; }
